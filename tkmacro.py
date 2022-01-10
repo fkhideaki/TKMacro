@@ -7,30 +7,33 @@ import re
 root = tk.Tk()
 txt = tk.Text(width=30, height=20)
 
+def execCmd(l):
+    rr = re.match('([a-zA-Z]+) +(.+)', l)
+    if not rr is None:
+        cmd = rr.group(1)
+        arg = rr.group(2)
+        if cmd == 'Click':
+            rr2 = re.match('([0-9]+) +([0-9]+)', arg)
+            px = int(rr2.group(1))
+            py = int(rr2.group(2))
+            pyautogui.click(x=px, y=py, clicks=1, interval=0, button="left")
+        elif cmd == 'Wait':
+            wt = float(arg)
+            time.sleep(wt * 0.001)
+    else:
+        cmd = l
+        if cmd == 'Copy':
+            pyautogui.hotkey("ctrl", "c")
+        elif cmd == 'Paste':
+            pyautogui.hotkey("ctrl", "v")
+        elif cmd == 'SelAll':
+            pyautogui.hotkey("ctrl", "a")
+
 def exec():
     t = txt.get( "1.0", "end")
     v = t.splitlines()
     for l in v:
-        rr = re.match('([a-zA-Z]+) +(.+)', l)
-        if not rr is None:
-            cmd = rr.group(1)
-            arg = rr.group(2)
-            if cmd == 'Click':
-                rr2 = re.match('([0-9]+) +([0-9]+)', arg)
-                px = int(rr2.group(1))
-                py = int(rr2.group(2))
-                pyautogui.click(x=px, y=py, clicks=1, interval=0, button="left")
-            elif cmd == 'Wait':
-                wt = float(arg)
-                time.sleep(wt * 0.001)
-        else:
-            cmd = l
-            if cmd == 'Copy':
-                pyautogui.hotkey("ctrl", "c")
-            elif cmd == 'Paste':
-                pyautogui.hotkey("ctrl", "v")
-            elif cmd == 'SelAll':
-                pyautogui.hotkey("ctrl", "a")
+        execCmd(l)
 
 
 def foc():
@@ -65,6 +68,8 @@ def inputKey(event):
         addClick()
     elif key == 'w':
         addLn('Wait ' + '100')
+    elif key == 'F5':
+        exec()
     elif key == 'Escape':
         clearAll()
     else:
