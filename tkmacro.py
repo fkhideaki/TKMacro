@@ -7,6 +7,9 @@ import re
 root = tk.Tk()
 txt = tk.Text(width=30, height=20)
 
+iniPx = 0
+iniPy = 0
+
 def execCmd(l):
     rr = re.match('([a-zA-Z]+) +(.+)', l)
     if not rr is None:
@@ -28,8 +31,16 @@ def execCmd(l):
             pyautogui.hotkey("ctrl", "v")
         elif cmd == 'SelAll':
             pyautogui.hotkey("ctrl", "a")
+        elif cmd == 'ResetPos':
+            pyautogui.moveTo(iniPx, iniPy)
+
 
 def exec():
+    global iniPx
+    global iniPy
+    p = pyautogui.position()
+    iniPx = p.x
+    iniPy = p.y
     t = txt.get( "1.0", "end")
     v = t.splitlines()
     for l in v:
@@ -66,6 +77,8 @@ def inputKey(event):
         addLn('Paste')
     elif key == 'q':
         addClick()
+    elif key == 'r':
+        addLn('ResetPos')
     elif key == 'w':
         addLn('Wait ' + '100')
     elif key == 'F5':
