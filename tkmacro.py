@@ -53,16 +53,16 @@ def foc():
 def addLn(s):
     txt.insert(tk.END, s + '\n')
 
+def addParamLn(, p):
+    addLn(s + ' ' + p)
+
 def addClick():
     p = pyautogui.position()
-    addLn('Click ' + str(p.x) + ' ' + str(p.y))
+    addParamLn('Click', str(p.x) + ' ' + str(p.y))
 
-def addCmd(c):
-    addLn(c)
-    
 def clearAll():
     txt.delete("1.0", "end")
-    
+
 def inputKey(event):
     focusobj = root.focus_get()
     if focusobj == txt:
@@ -80,7 +80,7 @@ def inputKey(event):
     elif key == 'r':
         addLn('ResetPos')
     elif key == 'w':
-        addLn('Wait ' + '100')
+        addParamLn('Wait', '50')
     elif key == 'F5':
         exec()
     elif key == 'Escape':
