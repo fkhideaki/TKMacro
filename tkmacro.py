@@ -99,8 +99,12 @@ def inputKey(event):
     else:
         print(key)
 
-
 def tkMain():
+    global root
+    global txt
+    global buttonExe
+    global buttonFoc
+
     root = tk.Tk()
     txt = tk.Text(
         width=28,
