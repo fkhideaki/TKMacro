@@ -34,9 +34,9 @@ def execCmd(l):
         cmd = rr.group(1)
         arg = rr.group(2)
         execParamCmd(cmd, arg)
-    else:
+    elif l != '':
         cmd = l
-        execSingleCmd(cmd, None)
+        execParamCmd(cmd, None)
 
 def exec():
     global onExec
