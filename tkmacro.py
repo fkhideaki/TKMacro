@@ -98,7 +98,13 @@ def addParamLn(s, p):
 
 def addClick():
     p = pyautogui.position()
+    bmx = buttonFoc.winfo_rootx() + buttonFoc.winfo_width() // 2
+    bmy = buttonFoc.winfo_rooty() + buttonFoc.winfo_height() // 2
+
     addParamLn('Click', str(p.x) + ' ' + str(p.y))
+    pyautogui.click(x=p.x, y=p.y, clicks=1, interval=0, button="left")
+    pyautogui.click(x=bmx, y=bmy, clicks=1, interval=0, button="left")
+    pyautogui.moveTo(p.x, p.y)
 
 def clearAll():
     txt.delete("1.0", "end")
