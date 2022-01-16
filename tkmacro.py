@@ -1,6 +1,7 @@
 import tkinter as tk
 import pyautogui
 import time
+import ctypes
 
 import re
 
@@ -11,6 +12,13 @@ onExec = False
 testMode = False
 
 
+def isPressing(key):
+    ks = ctypes.windll.user32.GetAsyncKeyState(key)
+    return bool(ks & 0x8000)
+
+def isEscPressing():
+    return isPressing(0x1B)
+
 def click(x, y, keepPos):
     if keepPos:
         p = pyautogui.position()
@@ -19,12 +27,22 @@ def click(x, y, keepPos):
     else:
         pyautogui.click(x=x, y=y, clicks=1, interval=0, button="left")
 
+def move(x, y):
+    pyautogui.moveTo(x, y)
+
+def parseLocation(arg):
+    rr2 = re.match('([0-9]+) +([0-9]+)', arg)
+    px = int(rr2.group(1))
+    py = int(rr2.group(2))
+    return px, py
+
 def execParamCmd(cmd, arg):
     if cmd == 'Click':
-        rr2 = re.match('([0-9]+) +([0-9]+)', arg)
-        px = int(rr2.group(1))
-        py = int(rr2.group(2))
+        px, py = parseLocation(arg)
         click(px, py, True)
+    elif cmd == 'Move':
+        px, py = parseLocation(arg)
+        move(px, py)
     elif cmd == 'Wait':
         wt = float(arg)
         time.sleep(wt * 0.001)
@@ -63,6 +81,8 @@ def exec():
     t = txt.get( "1.0", "end")
     v = t.splitlines()
     for l in v:
+        if isEscPressing():
+            break
         execCmd(l)
 
     onExec = False
@@ -103,8 +123,6 @@ def inputKey(event):
         addParamLn('Wait', '50')
     elif key == 'F5':
         exec()
-    elif key == 'Escape':
-        clearAll()
     else:
         if testMode:
             print(key)
