@@ -126,7 +126,7 @@ def inputKey(event):
     elif key == 'r':
         addLn('ResetPos')
     elif key == 'w':
-        addParamLn('Wait', '50')
+        addParamLn('Wait', '80')
     elif key == 'F5':
         exec()
     else:
