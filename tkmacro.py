@@ -11,12 +11,20 @@ onExec = False
 testMode = False
 
 
+def click(x, y, keepPos):
+    if keepPos:
+        p = pyautogui.position()
+        pyautogui.click(x=x, y=y, clicks=1, interval=0, button="left")
+        pyautogui.moveTo(p.x, p.y)
+    else:
+        pyautogui.click(x=x, y=y, clicks=1, interval=0, button="left")
+
 def execParamCmd(cmd, arg):
     if cmd == 'Click':
         rr2 = re.match('([0-9]+) +([0-9]+)', arg)
         px = int(rr2.group(1))
         py = int(rr2.group(2))
-        pyautogui.click(x=px, y=py, clicks=1, interval=0, button="left")
+        click(px, py, True)
     elif cmd == 'Wait':
         wt = float(arg)
         time.sleep(wt * 0.001)
