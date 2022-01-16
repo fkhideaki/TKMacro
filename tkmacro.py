@@ -4,40 +4,50 @@ import time
 
 import re
 
-root = tk.Tk()
-txt = tk.Text(width=30, height=20)
 
 iniPx = 0
 iniPy = 0
+onExec = False
+
+
+def execParamCmd(cmd, arg):
+    if cmd == 'Click':
+        rr2 = re.match('([0-9]+) +([0-9]+)', arg)
+        px = int(rr2.group(1))
+        py = int(rr2.group(2))
+        pyautogui.click(x=px, y=py, clicks=1, interval=0, button="left")
+    elif cmd == 'Wait':
+        wt = float(arg)
+        time.sleep(wt * 0.001)
+    elif cmd == 'Copy':
+        pyautogui.hotkey("ctrl", "c")
+    elif cmd == 'Paste':
+        pyautogui.hotkey("ctrl", "v")
+    elif cmd == 'SelAll':
+        pyautogui.hotkey("ctrl", "a")
+    elif cmd == 'ResetPos':
+        pyautogui.moveTo(iniPx, iniPy)
 
 def execCmd(l):
     rr = re.match('([a-zA-Z]+) +(.+)', l)
     if not rr is None:
         cmd = rr.group(1)
         arg = rr.group(2)
-        if cmd == 'Click':
-            rr2 = re.match('([0-9]+) +([0-9]+)', arg)
-            px = int(rr2.group(1))
-            py = int(rr2.group(2))
-            pyautogui.click(x=px, y=py, clicks=1, interval=0, button="left")
-        elif cmd == 'Wait':
-            wt = float(arg)
-            time.sleep(wt * 0.001)
+        execParamCmd(cmd, arg)
     else:
         cmd = l
-        if cmd == 'Copy':
-            pyautogui.hotkey("ctrl", "c")
-        elif cmd == 'Paste':
-            pyautogui.hotkey("ctrl", "v")
-        elif cmd == 'SelAll':
-            pyautogui.hotkey("ctrl", "a")
-        elif cmd == 'ResetPos':
-            pyautogui.moveTo(iniPx, iniPy)
-
+        execSingleCmd(cmd, None)
 
 def exec():
+    global onExec
     global iniPx
     global iniPy
+
+    if onExec:
+        return
+
+    onExec = True
+
     p = pyautogui.position()
     iniPx = p.x
     iniPy = p.y
@@ -46,6 +56,7 @@ def exec():
     for l in v:
         execCmd(l)
 
+    onExec = False
 
 def foc():
     buttonFoc.focus_set()
@@ -53,7 +64,7 @@ def foc():
 def addLn(s):
     txt.insert(tk.END, s + '\n')
 
-def addParamLn(, p):
+def addParamLn(s, p):
     addLn(s + ' ' + p)
 
 def addClick():
@@ -89,22 +100,35 @@ def inputKey(event):
         print(key)
 
 
-buttonExe = tk.Button(
-    root,
-    text="EXE",
-    command=exec)
-buttonFoc = tk.Button(
-    root,
-    text="FOC",
-    command=foc)
+def tkMain():
+    root = tk.Tk()
+    txt = tk.Text(
+        width=28,
+        height=18)
 
-root.title("TKMacro")
-root.geometry('300x350')
-root.attributes("-topmost", True)
-root.bind("<KeyPress>", inputKey)
+    buttonExe = tk.Button(
+        root,
+        text="EXE",
+        width=28,
+        height=2,
+        command=exec)
+    buttonFoc = tk.Button(
+        root,
+        text="FOC",
+        width=28,
+        height=2,
+        command=foc)
 
-buttonExe.pack()
-buttonFoc.pack()
-txt.pack()
+    root.title("TKMacro")
+    root.geometry('240x360')
+    root.attributes("-topmost", True)
+    root.bind("<KeyPress>", inputKey)
 
-root.mainloop()  
+    buttonExe.pack()
+    buttonFoc.pack()
+    txt.pack()
+
+    root.mainloop()
+
+
+tkMain()
