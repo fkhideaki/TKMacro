@@ -8,6 +8,7 @@ import re
 iniPx = 0
 iniPy = 0
 onExec = False
+testMode = False
 
 
 def execParamCmd(cmd, arg):
@@ -97,7 +98,8 @@ def inputKey(event):
     elif key == 'Escape':
         clearAll()
     else:
-        print(key)
+        if testMode:
+            print(key)
 
 def tkMain():
     global root
